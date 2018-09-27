@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Set无序集合  ==数组与集合的区别== 比较 | 数组 | 集合—|—|—元素序列 | 有序 | 无序元素的可重复性 | 元素可重复 | 元素不可重复  使用语法  12345语法：new Set([iterable]) : Setconst set = new Set(); 在创建集合对象时，我们同样可以直接使用一个现成的数组对象作为该集合对象的初始元素。 1const set = new">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新的数据结构">
+<meta property="og:url" content="http://yoursite.com/2018/09/27/新的数据结构/index.html">
+<meta property="og:site_name" content="SunShine">
+<meta property="og:description" content="Set无序集合  ==数组与集合的区别== 比较 | 数组 | 集合—|—|—元素序列 | 有序 | 无序元素的可重复性 | 元素可重复 | 元素不可重复  使用语法  12345语法：new Set([iterable]) : Setconst set = new Set(); 在创建集合对象时，我们同样可以直接使用一个现成的数组对象作为该集合对象的初始元素。 1const set = new">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-27T07:13:38.799Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="新的数据结构">
+<meta name="twitter:description" content="Set无序集合  ==数组与集合的区别== 比较 | 数组 | 集合—|—|—元素序列 | 有序 | 无序元素的可重复性 | 元素可重复 | 元素不可重复  使用语法  12345语法：new Set([iterable]) : Setconst set = new Set(); 在创建集合对象时，我们同样可以直接使用一个现成的数组对象作为该集合对象的初始元素。 1const set = new">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/27/新的数据结构/"/>
+
+
+
+
+
+  <title>新的数据结构 | SunShine</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/AngleMi"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SunShine</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/27/新的数据结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Min Zhi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blog.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SunShine">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">新的数据结构</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-27T14:32:02+08:00">
+                2018-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/《实战ES2015笔记》/" itemprop="url" rel="index">
+                    <span itemprop="name">《实战ES2015笔记》</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ol>
+<li>Set无序集合</li>
+</ol>
+<p>==数组与集合的区别==<br> 比较 | 数组 | 集合<br>—|—|—<br>元素序列 | 有序 | 无序<br>元素的可重复性 | 元素可重复 | 元素不可重复</p>
+<ul>
+<li>使用语法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">new Set([iterable]) : Set</span><br><span class="line"></span><br><span class="line">const set = new Set();</span><br></pre></td></tr></table></figure>
+<p>在创建集合对象时，我们同样可以直接使用一个现成的数组对象作为该集合对象的初始元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3]);</span><br></pre></td></tr></table></figure>
+<p>同样时因为目前亦然没有直接的语法糖可以支持集合，所以集合的任何操作都需要通过集合对象来实现，见以下表：</p>
+<p>==集合对象的操作方法：==</p>
+<table>
+<thead>
+<tr>
+<th>操作方法（语法）</th>
+<th>方法内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>set.add(value)</td>
+<td>添加元素到集合内</td>
+</tr>
+<tr>
+<td>set.delete(value)</td>
+<td>删除集合内的指定元素</td>
+</tr>
+<tr>
+<td>set.clear()</td>
+<td>清空集合内的元素</td>
+</tr>
+<tr>
+<td>set.forEach(callbackFn[, context])</td>
+<td>遍历集合内的所有元素，并作为第一参数调用callbackFn</td>
+</tr>
+<tr>
+<td>set.has(value)</td>
+<td>检查集合内是否含有某元素</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>增减元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set();</span><br><span class="line">// 添加元素</span><br><span class="line">set</span><br><span class="line">  .add(1)</span><br><span class="line">  .add(2)</span><br><span class="line">  .add(3)</span><br><span class="line">  .add(3) //这一句不会起到任何作用，因为元素3已存在于集合内</span><br><span class="line"> console.log(set); // Set &#123; 1, 2, 3 &#125;</span><br><span class="line"> // 删除元素</span><br><span class="line"> set.delete(2)</span><br><span class="line"> console.log(set) //Set &#123; 1, 3 &#125;</span><br><span class="line"> // 清空集合</span><br><span class="line"> set.clear()</span><br><span class="line"> console.log(set); //Set &#123;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查元素</p>
+</li>
+</ul>
+<p>因为集合中并没有排序的概念，所以集合对象并没有像数组对象那样有indexOf方法，也就意味这不能通过set.indexOf(value)&gt;=0的形式来检查元素是否存在与集合中。检查集合中的元素利用has()方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3,4]);</span><br><span class="line">//检查元素</span><br><span class="line">set.has(2) // true</span><br><span class="line">set.has(6) // false</span><br></pre></td></tr></table></figure>
+<ul>
+<li>遍历元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3,4]);</span><br><span class="line">set.forEach(item =&gt; &#123;</span><br><span class="line">    console.log(item);</span><br><span class="line">&#125;);</span><br><span class="line">// 1</span><br><span class="line">// 2</span><br><span class="line">// 3</span><br><span class="line">// 4</span><br><span class="line"></span><br><span class="line">set.forEach(item =&gt; &#123;</span><br><span class="line">    console.log(item * this.foo);</span><br><span class="line">&#125;,&#123;foo:2&#125;);</span><br><span class="line">// 2</span><br><span class="line">// 4</span><br><span class="line">// 6</span><br><span class="line">// 8</span><br></pre></td></tr></table></figure>
+<p>就像数组对象中的forEach一样，集合对象中的forEach方法时无法被中断的。而在ES2015中，由于Symbol的引入，数组等类型有了一个新的属性Symbol.iterator（迭代子），而这些类型也有了新的名称——可迭代对象(Iterable Object), 其中包括数组类型、子符串类型、TypedArray、集合类型以及Map和生成器类型。在ES2015中被定义的for-of循环语句便可以对这些可迭代对象进行迭代，并可以配合const或let使用，从而解决了forEach方法不可中断的问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3]);</span><br><span class="line">for (const val of set) &#123;</span><br><span class="line">    console.log(val);</span><br><span class="line">&#125;</span><br><span class="line">// 1 2 3</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>WeakSet</li>
+</ol>
+<p>首先从一段简单的代码中来了解WeakSet与Set的区别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">new WeakSet() : WeakSet</span><br><span class="line"></span><br><span class="line">const weakset = new WeakSet();</span><br><span class="line">weakset.add(1); // TypeError: Invalid value used in weak set</span><br><span class="line">weakset.add(&#123;foo:1&#125;);</span><br><span class="line">console.log(weakset) // WeakSet &#123;&#125;</span><br><span class="line">console.log(weakset.size); // undefined</span><br></pre></td></tr></table></figure>
+<p>从上可以看到WeakSet与Set有三个不一样的地方：</p>
+<ul>
+<li>WeakSet不能包含值类型元素，否则会抛出一个TypeError</li>
+<li>WeakSet不能包含无引用的对象，否则会自动清除出集合</li>
+<li>WeakSet无法被弹指其大小，也无法被弹指其中所包含的元素</li>
+</ul>
+<p>实际上，第一个和第三个差异都可以通过第二个来进行解释。Weak版本的数据类型是无法包含无引用的元素的，一旦数据结构内的任一元素的引用被全部解除，该元素便会被移除当前所在的数据结构。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const weakset = new WeakSet();</span><br><span class="line">let foo = &#123;bar:1&#125;;</span><br><span class="line">weakset.add(foo);</span><br><span class="line">console.log(weakset.has(foo)) // true</span><br><span class="line">foo = null;</span><br><span class="line">console.log(weakset.has(foo)) // false</span><br></pre></td></tr></table></figure>
+<p>在上面一段代码中，若直接将一个对象字面量加入到WeakSet中，该对象便会被自动移除，对象字面量自身是无法被引用的，所以无法被加入到WeakSet中。</p>
+<p>而无法加入值类型的原因在于，值类型在通过语法来表示的时候，是不存在引用的。而且值类型底层在进行操作的时候，会出现非常频繁的内存操作和引用变动。</p>
+<p>WeakSet最大的实用意义在于，可以让我们直接对引擎中垃圾收集器的允许情况有程序化的探知方式，开发者可以利用WeakSet的特性以更高的定制化方案来优化沉痼的内存使用方案。（不太懂）</p>
+<ol start="3">
+<li>Map映射类型</li>
+</ol>
+<ul>
+<li>使用语法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">new Map([iterable]) ：Map</span><br></pre></td></tr></table></figure>
+<p>在创建映射对象时，可以将一个以二元数组（键值对）作为元素的数组传入到构建函数中，其中每一个键值对都会加入到该映射对象中。该数组内的元素会以数组顺序进行处理，如果存在相同的键，则会按照FIFO(先进先出)原则，以该键最后一个处理的对应值为最终值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map([[&apos;foo&apos;,1],[&apos;foo&apos;,2]]);</span><br><span class="line">console.log(map.get(&apos;foo&apos;)); // 2</span><br></pre></td></tr></table></figure>
+<p>==映射对象操作方法==</p>
+<table>
+<thead>
+<tr>
+<th>操作方法（语法）</th>
+<th>方法内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>map.set(key,value)</td>
+<td>添加键值对到映射中</td>
+</tr>
+<tr>
+<td>map.get(key)</td>
+<td>获取映射中某一个键的对应值</td>
+</tr>
+<tr>
+<td>map.delete(key)</td>
+<td>将某一键值对移除出映射</td>
+</tr>
+<tr>
+<td>map.clear()</td>
+<td>清空映射中的所有键值对</td>
+</tr>
+<tr>
+<td>map.entries()</td>
+<td>返回一个以二元数组（键值对）作为元素的数组</td>
+</tr>
+<tr>
+<td>map.has(key)</td>
+<td>检查映射中是否包含某一键值对</td>
+</tr>
+<tr>
+<td>map.keys()</td>
+<td>返回一个以当前映射中所有键作为元素的可迭代对象</td>
+</tr>
+<tr>
+<td>map.values()</td>
+<td>返回一个以当前映射中所有值作为元素的可迭代对象</td>
+</tr>
+<tr>
+<td>map.size</td>
+<td>映射中键值对中的数量</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>增减键值对</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map();</span><br><span class="line">// 添加键值对</span><br><span class="line">map.set(&apos;foo&apos;, &apos;Hello&apos;)</span><br><span class="line">map.set(&apos;bar&apos;, &apos;World&apos;)</span><br><span class="line">map.set(&apos;bar&apos;, &apos;ES2015&apos;) //此处的值ES2015将覆盖之前按加入的值World</span><br><span class="line">// 删除键值对</span><br><span class="line">map.delete(&apos;foo&apos;)</span><br><span class="line">// 清空映射对象</span><br><span class="line">map.clear()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取键值对</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map();</span><br><span class="line">map.set(&apos;foo&apos;, &apos;bar&apos;);</span><br><span class="line">console.log(map.get(&apos;foo&apos;)); // bar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查映射对象中的键值对</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map([&apos;foo&apos;, 1]);</span><br><span class="line">console.log(map.has(&apos;foo&apos;)); // true</span><br><span class="line">console.log(map.has(&apos;bar&apos;)); // false</span><br></pre></td></tr></table></figure>
+<ul>
+<li>遍历映射对象中的键值对</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map([[&apos;foo&apos;,1], [&apos;bar&apos;,2]]);</span><br><span class="line">for(const [key, value] of map) &#123;</span><br><span class="line">    console.log(`$&#123;key&#125;:$&#123;value&#125;`);</span><br><span class="line">&#125;</span><br><span class="line">// foo:1</span><br><span class="line">// bar:2</span><br><span class="line">map.forEac((value,key) =&gt; &#123;</span><br><span class="line">    console.log(`$&#123;key&#125;:$&#123;value&#125;`);</span><br><span class="line">&#125;);</span><br><span class="line">// foo:1</span><br><span class="line">// bar:2</span><br></pre></td></tr></table></figure>
+<ul>
+<li>映射对象与Object的区别</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>比较</th>
+<th>映射对象Map</th>
+<th>普通对象Object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>存储键值对</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>遍历所有键值对</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>检查是否包含指定键值对</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>使用字符串（string）作为键</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>使用Symbol作为键</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>使用任意对象作为键</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>可以方便地得知键值对的数量</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<p>除了语法和实现层面上的区别外，映射对象和普通对象的区别还体现在JSON序列化结果中。Object的JSON序列化结果是标准的对象字面量形式，而映射对象的JSON处理结果则是以==关联数组==的形式表达。</p>
+<p>这种序列化结果的意义在于可以在通过网络等方式传输了结果后，再通过JSON.parse方法直接将解释结果传入Map构造函数中，来得到正确的映射对象。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/27/函数参数表达、传参/" rel="next" title="函数参数表达、传参">
+                <i class="fa fa-chevron-left"></i> 函数参数表达、传参
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/27/类语法（Classes）/" rel="prev" title="类语法(Classes)">
+                类语法(Classes) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/blog.jpg"
+                alt="Min Zhi" />
+            
+              <p class="site-author-name" itemprop="name">Min Zhi</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Min Zhi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<script type="text/javascript" src="/js/src/love.js"></script>
