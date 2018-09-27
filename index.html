@@ -363,61 +363,16 @@
       
         
           
-            <p>Promise最大的目的在于可以让异步代码变得井然有序，就如我们需要在浏览器中访问一个以JSON作为返回格式的第三方API，在数据下载完成个进行JSON解码，通过Promise来包装以不流程可以使代码变得非常干净整洁。</p>
-<p>Promise在设计上具有原子性，即只有三种状态：等待（Pending）、成功（Fulfilled）、失败（Rejected）。</p>
-<ol>
-<li>基本语法</li>
-</ol>
-<ul>
-<li>创建Promise对象</li>
-</ul>
-<p>Promise构造函数要求传入一个函数，并带有resolve和reject参数。这是两个用于结束Promise等待的函数，对应的状态分别是成功和失败。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">new Promise(executor) : Promise</span><br><span class="line">new Promise((resolve, reject) =&gt; statements) : Promise</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">function asyncMethod(..args) &#123;</span><br><span class="line">    return new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>进行异步操作</li>
-</ul>
-<p>创建了Promise对象后，就可以进行异步操作，并通过resolve(value)和reject(reason)方法来控制Promise的原子状态。</p>
-<p>(1) resolve(value)方法控制的是当前Promise对象是否进入成功状态，一旦执行该方法并传入==有且只有一个==的返回值，Promise便会从等待状态（Pending）进入成功状态（Fulfilled）,Promise也不会再接收任何状态的改变。<br>(2) reject(reason)方法控制的是当前Promise对象是否进入失败阶段，与resolve方法相同，一旦进入失败状态就无法再改变。</p>
-<ul>
-<li>处理Promise的状态</li>
-</ul>
-<p>与reolve(value)和reject(reason)方法对应的是，Promise对象有两个用于处理Promise对象状态变化的方法，如表所示：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>方法内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>promise.then(onFulfilled[, onRejected])</td>
-<td>处理Promise对象的成功状态并接收返回值，也可以处理失败状态并处理失败的原因（可选）</td>
-</tr>
-<tr>
-<td>promise.catch(onRejected)</td>
-<td>处理Promise对象的失败状态并处理失败的原因</td>
-</tr>
-</tbody>
-</table>
-<p>这两个方法都会返回一个Promise对象，Promise对象的组合便会成为一个Promise对象链，呈流水线的模式作业。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">promise.then(onFulfilled).catch(onRejected) : Promise</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>高级使用方法</li>
-</ol>
-<ul>
-<li>Promise.all(iterable)</li>
-</ul>
-<p>该方法可以传入一个可迭代对象（数组），并返回一个Promise对象，该Promise对象会在当可迭代对象中的==所有Promise对象都进入完成状态（包括成功和失败）后被激活==。</p>
-<p>(1) 如果可迭代对象中的所有Promise对象都进入了成功状态，那么该方法返回的Promise对象也会进入成功状态，并以一个可迭代对象来承载其中的所有返回值。</p>
-<p>(2) 如果可迭代对象中Promise对象的其中一个进入了失败状态，那么该方法返回的Promise对象也会进入失败状态，并以那个进入失败状态的错误信息作为自己的错误信息。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">Promise.all(iterable) : Promise</span><br><span class="line">示例：</span><br><span class="line"></span><br><span class="line">const promises = [async(1), async(2), async(3), async(4)];</span><br><span class="line">Promise.all(promises)</span><br><span class="line">    .then(values =&gt; &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(err =&gt; console.error(err))</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Promise.race(iterable)</li>
-</ul>
-<p>与Promise.all(iterable)方法不同的是，Promise.race(iterable)方法虽然同样也接受一个包含若干个Promise对象的可迭代对象，但不同的是这个方法会监听这所有的Promise对象，并等待其中的第一个进入完成转台的Promise对象。==一旦有第一个Promise对象进入了完成状态，该方法返回的Promise对象便会根据这第一个完成的Promise对象的状态而改变。==</p>
-
-          
+          Promise最大的目的在于可以让异步代码变得井然有序，就如我们需要在浏览器中访问一个以JSON作为返回格式的第三方API，在数据下载完成个进行JSON解码，通过Promise来包装以不流程可以使代码变得非常干净整洁。
+Promise在设计上具有原子性，即只有三种状态：等待（Pending）、成功（
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/Promise/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -568,47 +523,19 @@
       
         
           
-            <ol>
-<li>使用语法</li>
-</ol>
-<ul>
-<li>基本定义语法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">class name &#123;...&#125;</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">class Animal &#123;</span><br><span class="line">    constructor(family, specie, hue) &#123;</span><br><span class="line">        this.family = family;</span><br><span class="line">        this.specie = specie;</span><br><span class="line">        this.hue = hue;</span><br><span class="line">    &#125;</span><br><span class="line">    yell() &#123;</span><br><span class="line">        console.log(this.hue);</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> const doge = new Animal(&apos;Canidae&apos;, &apos;Canis lupus&apos;, &apos;Woug&apos;);</span><br><span class="line"> doge.yell(); // Woug</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>在ES2015的类语法中，原本的构造函数被类的constructor方法代替，而其余原本需要定义在prototype中的方法则可以直接定义在class内。</p>
-<ul>
-<li>继承语法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">class SubClass extends SuperClass &#123;&#125;</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">class Point2D &#123;</span><br><span class="line">    constructor(x, y) &#123;</span><br><span class="line">        this.x = x;</span><br><span class="line">        this.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">    toString() &#123;</span><br><span class="line">        return `($&#123;this.x&#125;, $&#123;this.y&#125;)`;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Point3D extends Point2D &#123;</span><br><span class="line">    constructor(x,y,z) &#123;</span><br><span class="line">        super(x,y);</span><br><span class="line">        this.z = z;</span><br><span class="line">    &#125;</span><br><span class="line">    toString() &#123;</span><br><span class="line">        return `($&#123;this.x&#125;, $&#123;this.y&#125;, $&#123;this.z&#125;)`;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>非常方便的是，ES2015的继承语法同样可以将以前使用构造函数模拟的类作为父类来继承，而并非只由class语法定义的类才可以使用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function Cat() &#123;&#125;</span><br><span class="line">Cat.prototype.climb = function() &#123;</span><br><span class="line">    return &quot;I can climb&quot;;</span><br><span class="line">&#125;</span><br><span class="line">Cat.prototype.yell = function() &#123;</span><br><span class="line">    return &quot;Meow&quot;;</span><br><span class="line">&#125;</span><br><span class="line">class Tiger extends Cat &#123;</span><br><span class="line">    yell() &#123;</span><br><span class="line">        return &quot;Aoh&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">const tiger = new Tiger();</span><br><span class="line">console.log(tiger.yell()) // Aoh</span><br><span class="line">console.log(tiger.climb()) // I can climb</span><br></pre></td></tr></table></figure>
-<p>==注意：==<br>如果一个子类继承了一个弗雷，那么在子类的constructor构造函数中必须使用super函数调用父类的构造函数后才能子啊子类的constructor构造函数中使用this，否则会爆出 this is not defined 的错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Foo &#123;&#125;</span><br><span class="line">class Bar extends Foo &#123;</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        this.property = 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">new Bar() // this is not defined</span><br></pre></td></tr></table></figure>
-<p>==这个问题在除constructor构造函数以外的方法中并不会出现，即便在子类的构造函数中并没有调用super函数，在其他方法中依然可以调用this来指向当前实例。==</p>
-<ul>
-<li>Getter/Setter</li>
-</ul>
-<p>ES2015的类机制支持Getter/Setter在类中的使用，配合元编程的概念，类的能力会变得更加强大。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">    constructor(x,y) &#123;</span><br><span class="line">        this.x = x;</span><br><span class="line">        this.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">    get d() &#123;</span><br><span class="line">        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">const p = new Point(3,4);</span><br><span class="line">console.log(p.d) // 5</span><br></pre></td></tr></table></figure>
-<ul>
-<li>静态方法</li>
-<li>高级技巧</li>
-</ul>
-<ol start="2">
-<li>注意事项</li>
-</ol>
-<p>虽然说ES2015中的类语法可以与以前的原型一起使用，但是它们之间也是有一定区别的。函数在ECMAScript中有两种定义方法，即声明式和定义式，声明式的函数定义在ECMAScript的运行中是可以被提升的。但对于ES2015中类语法来说，这个特性是无法使用的。从逻辑角度上看，类的继承必须是单向的，不可能出现A类继承于B类的同时B类也继承A类的现象，这就意味着，父类必须在子类定义之前被定义。</p>
-<ol start="3">
-<li>遗憾和期望</li>
-</ol>
-<ul>
-<li>不支持私有属性</li>
-<li>不支持实例属性，但目前可以通过Getter/Setter实现</li>
-<li>不支持多重继承</li>
-<li>暂时没有类似协议（Protocl）和接口（Interface）的概念</li>
-</ul>
-
           
+使用语法
+
+
+基本定义语法1234567891011121314151617语法：class name &#123;...&#125;示例：class Animal &#123;    constructor(family, specie, hue) &#123;        this.fami
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/类语法（Classes）/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -759,203 +686,23 @@
       
         
           
-            <ol>
-<li>Set无序集合</li>
-</ol>
-<p>==数组与集合的区别==<br> 比较 | 数组 | 集合<br>—|—|—<br>元素序列 | 有序 | 无序<br>元素的可重复性 | 元素可重复 | 元素不可重复</p>
-<ul>
-<li>使用语法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">new Set([iterable]) : Set</span><br><span class="line"></span><br><span class="line">const set = new Set();</span><br></pre></td></tr></table></figure>
-<p>在创建集合对象时，我们同样可以直接使用一个现成的数组对象作为该集合对象的初始元素。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3]);</span><br></pre></td></tr></table></figure>
-<p>同样时因为目前亦然没有直接的语法糖可以支持集合，所以集合的任何操作都需要通过集合对象来实现，见以下表：</p>
-<p>==集合对象的操作方法：==</p>
-<table>
-<thead>
-<tr>
-<th>操作方法（语法）</th>
-<th>方法内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>set.add(value)</td>
-<td>添加元素到集合内</td>
-</tr>
-<tr>
-<td>set.delete(value)</td>
-<td>删除集合内的指定元素</td>
-</tr>
-<tr>
-<td>set.clear()</td>
-<td>清空集合内的元素</td>
-</tr>
-<tr>
-<td>set.forEach(callbackFn[, context])</td>
-<td>遍历集合内的所有元素，并作为第一参数调用callbackFn</td>
-</tr>
-<tr>
-<td>set.has(value)</td>
-<td>检查集合内是否含有某元素</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>增减元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set();</span><br><span class="line">// 添加元素</span><br><span class="line">set</span><br><span class="line">  .add(1)</span><br><span class="line">  .add(2)</span><br><span class="line">  .add(3)</span><br><span class="line">  .add(3) //这一句不会起到任何作用，因为元素3已存在于集合内</span><br><span class="line"> console.log(set); // Set &#123; 1, 2, 3 &#125;</span><br><span class="line"> // 删除元素</span><br><span class="line"> set.delete(2)</span><br><span class="line"> console.log(set) //Set &#123; 1, 3 &#125;</span><br><span class="line"> // 清空集合</span><br><span class="line"> set.clear()</span><br><span class="line"> console.log(set); //Set &#123;&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>检查元素</p>
-</li>
-</ul>
-<p>因为集合中并没有排序的概念，所以集合对象并没有像数组对象那样有indexOf方法，也就意味这不能通过set.indexOf(value)&gt;=0的形式来检查元素是否存在与集合中。检查集合中的元素利用has()方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3,4]);</span><br><span class="line">//检查元素</span><br><span class="line">set.has(2) // true</span><br><span class="line">set.has(6) // false</span><br></pre></td></tr></table></figure>
-<ul>
-<li>遍历元素</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3,4]);</span><br><span class="line">set.forEach(item =&gt; &#123;</span><br><span class="line">    console.log(item);</span><br><span class="line">&#125;);</span><br><span class="line">// 1</span><br><span class="line">// 2</span><br><span class="line">// 3</span><br><span class="line">// 4</span><br><span class="line"></span><br><span class="line">set.forEach(item =&gt; &#123;</span><br><span class="line">    console.log(item * this.foo);</span><br><span class="line">&#125;,&#123;foo:2&#125;);</span><br><span class="line">// 2</span><br><span class="line">// 4</span><br><span class="line">// 6</span><br><span class="line">// 8</span><br></pre></td></tr></table></figure>
-<p>就像数组对象中的forEach一样，集合对象中的forEach方法时无法被中断的。而在ES2015中，由于Symbol的引入，数组等类型有了一个新的属性Symbol.iterator（迭代子），而这些类型也有了新的名称——可迭代对象(Iterable Object), 其中包括数组类型、子符串类型、TypedArray、集合类型以及Map和生成器类型。在ES2015中被定义的for-of循环语句便可以对这些可迭代对象进行迭代，并可以配合const或let使用，从而解决了forEach方法不可中断的问题。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const set = new Set([1,2,3]);</span><br><span class="line">for (const val of set) &#123;</span><br><span class="line">    console.log(val);</span><br><span class="line">&#125;</span><br><span class="line">// 1 2 3</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>WeakSet</li>
-</ol>
-<p>首先从一段简单的代码中来了解WeakSet与Set的区别：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line"></span><br><span class="line">new WeakSet() : WeakSet</span><br><span class="line"></span><br><span class="line">const weakset = new WeakSet();</span><br><span class="line">weakset.add(1); // TypeError: Invalid value used in weak set</span><br><span class="line">weakset.add(&#123;foo:1&#125;);</span><br><span class="line">console.log(weakset) // WeakSet &#123;&#125;</span><br><span class="line">console.log(weakset.size); // undefined</span><br></pre></td></tr></table></figure>
-<p>从上可以看到WeakSet与Set有三个不一样的地方：</p>
-<ul>
-<li>WeakSet不能包含值类型元素，否则会抛出一个TypeError</li>
-<li>WeakSet不能包含无引用的对象，否则会自动清除出集合</li>
-<li>WeakSet无法被弹指其大小，也无法被弹指其中所包含的元素</li>
-</ul>
-<p>实际上，第一个和第三个差异都可以通过第二个来进行解释。Weak版本的数据类型是无法包含无引用的元素的，一旦数据结构内的任一元素的引用被全部解除，该元素便会被移除当前所在的数据结构。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const weakset = new WeakSet();</span><br><span class="line">let foo = &#123;bar:1&#125;;</span><br><span class="line">weakset.add(foo);</span><br><span class="line">console.log(weakset.has(foo)) // true</span><br><span class="line">foo = null;</span><br><span class="line">console.log(weakset.has(foo)) // false</span><br></pre></td></tr></table></figure>
-<p>在上面一段代码中，若直接将一个对象字面量加入到WeakSet中，该对象便会被自动移除，对象字面量自身是无法被引用的，所以无法被加入到WeakSet中。</p>
-<p>而无法加入值类型的原因在于，值类型在通过语法来表示的时候，是不存在引用的。而且值类型底层在进行操作的时候，会出现非常频繁的内存操作和引用变动。</p>
-<p>WeakSet最大的实用意义在于，可以让我们直接对引擎中垃圾收集器的允许情况有程序化的探知方式，开发者可以利用WeakSet的特性以更高的定制化方案来优化沉痼的内存使用方案。（不太懂）</p>
-<ol start="3">
-<li>Map映射类型</li>
-</ol>
-<ul>
-<li>使用语法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">new Map([iterable]) ：Map</span><br></pre></td></tr></table></figure>
-<p>在创建映射对象时，可以将一个以二元数组（键值对）作为元素的数组传入到构建函数中，其中每一个键值对都会加入到该映射对象中。该数组内的元素会以数组顺序进行处理，如果存在相同的键，则会按照FIFO(先进先出)原则，以该键最后一个处理的对应值为最终值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map([[&apos;foo&apos;,1],[&apos;foo&apos;,2]]);</span><br><span class="line">console.log(map.get(&apos;foo&apos;)); // 2</span><br></pre></td></tr></table></figure>
-<p>==映射对象操作方法==</p>
-<table>
-<thead>
-<tr>
-<th>操作方法（语法）</th>
-<th>方法内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>map.set(key,value)</td>
-<td>添加键值对到映射中</td>
-</tr>
-<tr>
-<td>map.get(key)</td>
-<td>获取映射中某一个键的对应值</td>
-</tr>
-<tr>
-<td>map.delete(key)</td>
-<td>将某一键值对移除出映射</td>
-</tr>
-<tr>
-<td>map.clear()</td>
-<td>清空映射中的所有键值对</td>
-</tr>
-<tr>
-<td>map.entries()</td>
-<td>返回一个以二元数组（键值对）作为元素的数组</td>
-</tr>
-<tr>
-<td>map.has(key)</td>
-<td>检查映射中是否包含某一键值对</td>
-</tr>
-<tr>
-<td>map.keys()</td>
-<td>返回一个以当前映射中所有键作为元素的可迭代对象</td>
-</tr>
-<tr>
-<td>map.values()</td>
-<td>返回一个以当前映射中所有值作为元素的可迭代对象</td>
-</tr>
-<tr>
-<td>map.size</td>
-<td>映射中键值对中的数量</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>增减键值对</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map();</span><br><span class="line">// 添加键值对</span><br><span class="line">map.set(&apos;foo&apos;, &apos;Hello&apos;)</span><br><span class="line">map.set(&apos;bar&apos;, &apos;World&apos;)</span><br><span class="line">map.set(&apos;bar&apos;, &apos;ES2015&apos;) //此处的值ES2015将覆盖之前按加入的值World</span><br><span class="line">// 删除键值对</span><br><span class="line">map.delete(&apos;foo&apos;)</span><br><span class="line">// 清空映射对象</span><br><span class="line">map.clear()</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>获取键值对</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map();</span><br><span class="line">map.set(&apos;foo&apos;, &apos;bar&apos;);</span><br><span class="line">console.log(map.get(&apos;foo&apos;)); // bar</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>检查映射对象中的键值对</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map([&apos;foo&apos;, 1]);</span><br><span class="line">console.log(map.has(&apos;foo&apos;)); // true</span><br><span class="line">console.log(map.has(&apos;bar&apos;)); // false</span><br></pre></td></tr></table></figure>
-<ul>
-<li>遍历映射对象中的键值对</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const map = new Map([[&apos;foo&apos;,1], [&apos;bar&apos;,2]]);</span><br><span class="line">for(const [key, value] of map) &#123;</span><br><span class="line">    console.log(`$&#123;key&#125;:$&#123;value&#125;`);</span><br><span class="line">&#125;</span><br><span class="line">// foo:1</span><br><span class="line">// bar:2</span><br><span class="line">map.forEac((value,key) =&gt; &#123;</span><br><span class="line">    console.log(`$&#123;key&#125;:$&#123;value&#125;`);</span><br><span class="line">&#125;);</span><br><span class="line">// foo:1</span><br><span class="line">// bar:2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>映射对象与Object的区别</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>比较</th>
-<th>映射对象Map</th>
-<th>普通对象Object</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>存储键值对</td>
-<td>Y</td>
-<td>Y</td>
-</tr>
-<tr>
-<td>遍历所有键值对</td>
-<td>Y</td>
-<td>Y</td>
-</tr>
-<tr>
-<td>检查是否包含指定键值对</td>
-<td>Y</td>
-<td>Y</td>
-</tr>
-<tr>
-<td>使用字符串（string）作为键</td>
-<td>Y</td>
-<td>Y</td>
-</tr>
-<tr>
-<td>使用Symbol作为键</td>
-<td>Y</td>
-<td>Y</td>
-</tr>
-<tr>
-<td>使用任意对象作为键</td>
-<td>Y</td>
-<td>N</td>
-</tr>
-<tr>
-<td>可以方便地得知键值对的数量</td>
-<td>Y</td>
-<td>N</td>
-</tr>
-</tbody>
-</table>
-<p>除了语法和实现层面上的区别外，映射对象和普通对象的区别还体现在JSON序列化结果中。Object的JSON序列化结果是标准的对象字面量形式，而映射对象的JSON处理结果则是以==关联数组==的形式表达。</p>
-<p>这种序列化结果的意义在于可以在通过网络等方式传输了结果后，再通过JSON.parse方法直接将解释结果传入Map构造函数中，来得到正确的映射对象。</p>
-
           
+Set无序集合
+
+==数组与集合的区别== 比较 | 数组 | 集合—|—|—元素序列 | 有序 | 无序元素的可重复性 | 元素可重复 | 元素不可重复
+
+使用语法
+
+12345语法：new Set([iterable]) : Setconst set = new Set();
+在创建集合对象时
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/新的数据结构/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1106,42 +853,19 @@
       
         
           
-            <p>1、默认参数值</p>
-<ul>
-<li>使用语法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function name(arg = defaultValue) &#123; ... &#125;</span><br><span class="line"></span><br><span class="line">function fn(arg = &apos;foo&apos;) &#123;</span><br><span class="line">    console.log(arg);</span><br><span class="line">&#125;</span><br><span class="line">fn(); // foo</span><br><span class="line">fn(&apos;bar&apos;); // bar</span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用场景</li>
-</ul>
-<p>在JavaScript通用组件开发中，某一个接口很有可能需要同时提供两种获取返回值的方式——回调函数与Promise。而当使用了Promise时，应当允许不传入作为最后一个形参的回调函数。在某种意义上可以说让这个会带哦函数的缺省值为一个noop函数，即空函数，使内部程序在将其作为回调函数执行的时候不会有任何行为发生。（不太懂）</p>
-<p>函数的默认参数特性还可以用在某一个对象的方法中，而且所指定的默认参数还可以被定为该对象的某一个属性，这一特性可以用在很多逻辑开发场景中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const obj = &#123;</span><br><span class="line">    msg: &apos;World&apos;,</span><br><span class="line">    greet(message = this.msg) &#123;</span><br><span class="line">        console.log(`hello $&#123;message&#125;`);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">obj.greet(); // Hello World</span><br><span class="line">obj.greet(&apos;ES2015&apos;); // Hello ES2015</span><br></pre></td></tr></table></figure>
-<p>2、剩余参数</p>
-<ul>
-<li>使用语法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function fn([arg, ]...restArgs) &#123;&#125;</span><br><span class="line"></span><br><span class="line">function fn(foo, ...rest) &#123;</span><br><span class="line">    console.log(`foo: $&#123;foo&#125;`);</span><br><span class="line">    console.log(`Resr Arguments: $&#123;rest.join(&apos;,&apos;)&#125;`)</span><br><span class="line">&#125;</span><br><span class="line">fn(1,2,3,4,5);</span><br><span class="line">// foo: 1</span><br><span class="line">// Resr Arguments: 2,3,4,5</span><br></pre></td></tr></table></figure>
-<p>补充：<br>将类数组转为数组的方法有以下三种：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[].slice.call(arguments);</span><br><span class="line">Array.from(arguments);</span><br><span class="line">[...arguments];</span><br><span class="line"></span><br><span class="line">function fn() &#123;</span><br><span class="line">    var args = [].slice.call(arguments);</span><br><span class="line">    var args1 = [...arguments];</span><br><span class="line">    var args2 = Array.from(arguments);</span><br><span class="line">    console.log(args);</span><br><span class="line">    console.log(args1);</span><br><span class="line">    console.log(args2);</span><br><span class="line">&#125;</span><br><span class="line">fn(1,2,3,4,5);</span><br><span class="line">// [ 1, 2, 3, 4, 5 ]</span><br><span class="line">// [ 1, 2, 3, 4, 5 ]</span><br><span class="line">// [ 1, 2, 3, 4, 5 ]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用场景</li>
-</ul>
-<p>在以往的ECMAScript开发中，arguments对象最大的应用场景时判断当前的调用行为以及获取未在函数形参内被定义的传入参数。比如十分常用的merge和mixin函数（合并对象）就会需要使用到剩余参数这个特性类实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function merge(target = &#123;&#125;, ...objs) &#123;</span><br><span class="line">    for(const obj of objs) &#123;</span><br><span class="line">        const keys = Object.keys(obj);</span><br><span class="line">        for(const key of keys) &#123;</span><br><span class="line">            target[key] = obj[key];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return target;</span><br><span class="line">&#125;</span><br><span class="line">console.log(merge(&#123;a:1&#125;,&#123;b:2&#125;,&#123;c:3&#125;));</span><br><span class="line">// &#123; a: 1, b: 2, c: 3 &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>注意事项</li>
-</ul>
-<p>语法使用的注意事项：</p>
-<p>要注意的时，一旦一个函数的参数列表中使用了剩余参数的语法糖，后面便不可以再添加任何参数，否则会抛出错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">function fn1 (..rest) &#123; ... &#125;  //Correct</span><br><span class="line">function fn2 (...rest, foo) &#123;...&#125; //Syntax Error</span><br></pre></td></tr></table></figure>
-<p>arguments与剩余参数：</p>
-<p>虽然从语言角度看，arguments和…args是可以同时使用的，但有一种情况除外——arguments在箭头函数中，会跟随上下文绑定到上层，所以在不确定上下文绑定结果的情况下，尽可能不要在箭头函数中使用arguments，而要使用…args。</p>
-<p>3、解构传参</p>
-<p>与剩余参数一样，解构传参使用…作为语法糖标示符。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fn(...[arg1,arg2])</span><br><span class="line"></span><br><span class="line">function sum(...numbers) &#123;</span><br><span class="line">    return nnumbers.reduce((a,b) =&gt; a + b );</span><br><span class="line">&#125;</span><br><span class="line">console.log(sum(...[1,2,3]));  // 6</span><br></pre></td></tr></table></figure>
+          1、默认参数值
 
-          
+使用语法
+
+1234567function name(arg = defaultValue) &#123; ... &#125;function fn(arg = &apos;foo&apos;) &#123;    console.log(arg);&#125;fn(); // 
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/函数参数表达、传参/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1292,59 +1016,18 @@
       
         
           
-            <p>1、使用语法</p>
-<ul>
-<li><p>使用对象作为返回载体（带有标签的多返回值）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">&#123; arg1, arg2 &#125; = &#123; arg1:value1, arg2: value2&#125;</span><br><span class="line">示例：</span><br><span class="line">function getState() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">        error: null,</span><br><span class="line">        logined: true,</span><br><span class="line">        user: &#123;&#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">const &#123; error, logined, user &#125; = getState();</span><br><span class="line">console.log(error,logined,user);</span><br><span class="line">// null true &#123;&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用数组作为返回载体</p>
-</li>
-</ul>
-<p>使用数组作为返回载体与使用对象作为返回载体的区别是：数组需要让被赋予的变量（或常量）名按照数组的顺序获得值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">[ arg1, arg2 ] = [ value1, value2];</span><br><span class="line">示例：</span><br><span class="line">const [ foo, bar ] = [ 1, 2];</span><br><span class="line">console.log(foo,bar);</span><br><span class="line">// 1 2</span><br></pre></td></tr></table></figure>
-<p>如果你希望跳过数组中的某些元素，那么可以通过空开一个元素的方式来实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">[ arg1, , arg2 ] = [ value1, value2, value3 ];</span><br><span class="line">示例：</span><br><span class="line">const [ foo, , bar] = [ 1, 2, 3 ];</span><br><span class="line">console.log(foo, bar);</span><br><span class="line">// 1 3</span><br></pre></td></tr></table></figure>
-<p>如果你希望能在获取指定位置的元以外，也可以不定项第获取后续的元素，那么可以用 … 语句来实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">语法：</span><br><span class="line">[ arg1, arg2, ...restArgs ] = [ value1, value2, value3, value4 ];</span><br><span class="line">const [ a, b ...rest ] = [ 1, 2, 3, 4, 5];</span><br><span class="line">console.log(a, b); // 1 2</span><br><span class="line">console.log(rest); // [3, 4, 5]</span><br></pre></td></tr></table></figure>
-<p>2、使用场景</p>
-<ul>
-<li>Promise与模式匹配</li>
-</ul>
-<p>在Promise的标准定义中，可以看到Promise是只允许返回一个值的。但在很多情况下，我们需要向Promise的onFulfilled传递多于一个返回值，那么我们需要用到结构特性来实现这个需求。</p>
-<p>==在文档约定完备的情况下==，我们可以使用数组作为载体，好处在于执行Promise.resovle方法时的语法较为简单。需要注意的是，如果在Promise.then方法中传入的是一个带有解构参数的箭头函数时，解构参数外必须要有一个括号包裹，否则会抛出语法错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function fetchData() &#123;</span><br><span class="line">    return new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">        resolve([ &apos;foo&apos;, &apos;bar&apos; ]);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fetchData()</span><br><span class="line">    .then(([ value1, value2 ]) =&gt; &#123;</span><br><span class="line">        console.log(value1, value2);</span><br><span class="line">        // foo bar</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
-<p>如果参数多多但在某个场景下并不需要全部参数，或者文档约定不完善的情况下，使用对象作为传递载体更佳。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function fetchData() &#123;</span><br><span class="line">    return new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">        resolve(&#123;</span><br><span class="line">            code: 200,</span><br><span class="line">            message: &apos;Ok&apos;,</span><br><span class="line">            data: [&apos;foo&apos;, &apos;bar&apos;]</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">fetchData()</span><br><span class="line">    .then((&#123; data &#125;) =&gt; console.log(data));</span><br><span class="line">    // [ &apos;foo&apos;, &apos;bar&apos; ]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Swap(变量值交换)</li>
-</ul>
-<p>在过去的ECMAScript中，我们一般需要一个临时中间变量来实现Swap，而在ES2015中，我们可以使用模式匹配来实现Swap。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function swap(a, b) &#123;</span><br><span class="line">    var tmp = a;</span><br><span class="line">    a = b;</span><br><span class="line">    b = tmp;</span><br><span class="line">&#125;</span><br><span class="line">let foo = 1;</span><br><span class="line">let bar = 2;</span><br><span class="line"></span><br><span class="line">// Before Swap</span><br><span class="line">console.log(foo, bar); // 1 2</span><br><span class="line">// Swap</span><br><span class="line">[foo, bar] = [bar, foo];</span><br><span class="line">console.log(foo, bar); // 2 1</span><br></pre></td></tr></table></figure>
-<p>3、高级用法</p>
-<ul>
-<li>解构别名</li>
-</ul>
-<p>如果在一个使用了对象作为多返回值载体的函数中，我们需要获取其中的某个返回值，但是却不想使用其中的属性名作为新的变量名（或常量名），那么就可以使用别名来获得相应的返回值，只需要在原来的返回值名称后面加上“：x”即可，其中x为希望使用的变量名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function fetchData() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">        response: [ &apos;foo&apos;, &apos;bar&apos;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">const &#123; response: data &#125; = fetchData();</span><br><span class="line">console.log(data); // [ &apos;foo&apos;, &apos;bar&apos; ]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>无法匹配的缺省值</li>
-</ul>
-<p>在模式匹配中，存在无法匹配的值，默认情况下会获得undefined。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Object</span><br><span class="line">const &#123; foo, bar &#125; = &#123; foo: 1 &#125;</span><br><span class="line">console.log(foo, bar); // 1 undefined</span><br><span class="line"></span><br><span class="line">// Array</span><br><span class="line">const [ a, b, c ] = [1,2]</span><br><span class="line">console.log(a,b,c); // 1 2 undefined</span><br></pre></td></tr></table></figure>
-<p>当然，如果不希望得到undefined，ES2015也允许我们为参数赋予一个默认值，即当无法匹配到相应的值时，该变量便会使用默认值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const &#123; foo = 1 &#125; = &#123; bar: 1&#125;</span><br><span class="line">console.log(foo); // 1</span><br><span class="line">const [a, b=2] = [1]</span><br><span class="line">console.log(a, b); // 1 2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>深层匹配</li>
-</ul>
-<p>我们可以通过嵌套解构表达式来获取深层的内容，而且可以在对象中嵌套数组来获取对象中的数组的某元素，反之亦然。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// Object in Object</span><br><span class="line">const &#123; a, b: &#123;c&#125; &#125; = &#123; a:1, b: &#123; c: 2&#125; &#125;;</span><br><span class="line">console.log(a,c); // 1 2</span><br><span class="line">// Array in Object</span><br><span class="line">const &#123; d, e: [f] &#125; = &#123; d:1, e: [2,3] &#125;;</span><br><span class="line">console.log(d,f); // 1 2</span><br><span class="line">// Object in Array</span><br><span class="line">const [g, &#123;h&#125; ] = [1, &#123;h:2&#125;];</span><br><span class="line">console.log(g,h); // 1 2</span><br><span class="line">// Array in Array</span><br><span class="line">const [i, [j]] = [1, [2,3]];</span><br><span class="line">console.log(i,j); // 1 2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>配合其他新特性</li>
-</ul>
-<p>比如for-of循环，配合const、Array.entries()等特性，我们可以写成远比ES5时代更好的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const arr = [&apos;Mike&apos;, &apos;Peter&apos;, &apos;Ben&apos;, &apos;William&apos;, &apos;John&apos;];</span><br><span class="line">for(const [index, item] of arr.entries()) &#123;</span><br><span class="line">    console.log(index, item);</span><br><span class="line">    if (item.match(/^W/)) break;</span><br><span class="line">&#125;</span><br><span class="line">// 0 &apos;Mike&apos;</span><br><span class="line">// 1 &apos;Peter&apos;</span><br><span class="line">// 2 &apos;Ben&apos;</span><br><span class="line">// 3 &apos;William&apos;</span><br></pre></td></tr></table></figure>
+          1、使用语法
 
-          
+使用对象作为返回载体（带有标签的多返回值）
+12345678910111213语法：&#123; arg1, arg2 &#125; = &#123; arg1:value1, arg2: value2&#125;示例：function getState() &#123;    re
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/表达式结构（Destructuring）/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1495,29 +1178,17 @@
       
         
           
-            <p>1、函数类属性的省略语法</p>
-<p>由于ES2015中引入了类机制（Class），普通的对象字面量也吸收了其中的一些语法糖，这可以==让方法属性省略function==，因此让方法属性可以以一种更直观的语法来表达。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">语法</span><br><span class="line">&#123; method() &#123;...&#125; &#125;</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">const obj = &#123;</span><br><span class="line">    // Before</span><br><span class="line">    foo: function() &#123;</span><br><span class="line">        return &apos;foo&apos;;</span><br><span class="line">    &#125;,</span><br><span class="line">    //After</span><br><span class="line">    bar() &#123;</span><br><span class="line">        return &apos;bar&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2、支持<em>proto</em>注入（实际用到中再详细看一下）</p>
-<p>意义：开发者可以得到更高的对象操作权限，从而更加灵活地创建和操作对象。</p>
-<p>用一个例子来说，再Node.js得标准苦衷有一个名为events得库，其中便提供了EventEmitter这个用于实现事件状态机的类。EventEmitter中包含了如on、once、emit等用于对事件进行监听、触发的方法，别的组件会通过这个中心管理器进行监听来完成消息传递。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// EventEmitter</span><br><span class="line">import &#123; EventEmitter &#125; from &apos;events&apos;</span><br><span class="line"></span><br><span class="line">const emitter = new EventEmitter();</span><br><span class="line">emitter.on(&apos;event&apos;, msg =&gt; &#123;</span><br><span class="line">    console.log(`Received message: $&#123;msg&#125;`);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">emitter.emit(&apos;event&apos;, &apos;Hello World&apos;);</span><br><span class="line"></span><br><span class="line">// =&gt; Received message: Hello World</span><br></pre></td></tr></table></figure>
-<p>一般情况下，EventEmitter类的使用方式是将其作为一个类的弗雷，以让子类继承EventEmitter。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class Machine extends EventEmitter &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>但是在现在这个需求中，如果只是为了一个单一的实例而创建了一个类，就显得太过冗余。在ES2015标准之前，我们可能会通过mixin或merge等方法将一个EventEmitter类的实例的方法合并到一个对象中。</p>
-<p>在ES2015中我们可以这样做：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import &#123; EventEmitter &#125; from &apos;events&apos;</span><br><span class="line">const machine = &#123;</span><br><span class="line">    _proto_: new EventEmitter(),</span><br><span class="line">    method() &#123;...&#125;,</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(machine); // EventEmitter &#123;&#125;</span><br><span class="line">console.log(machine instanceof EventEmitter) //true</span><br><span class="line">machine.on(&apos;event&apos;, msg =&gt; console.log(`Received message: $&#123;msg&#125;`))</span><br><span class="line">machine.emit(&apos;event&apos;, &apos;Hello World&apos;) // Received message: Hello World</span><br></pre></td></tr></table></figure>
-<p>3、可动态计算的属性名</p>
-<p>在ES2015标准中=对于对象字面量的处理中，引入了一个新的语法，这个语法允许我们直接使用一个表达式来表达一个属性名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const obj = &#123;&#125;;</span><br><span class="line">const key = &apos;foo&apos;;</span><br><span class="line">obj[&apos;abc&apos; + key] = &apos;bar&apos;;</span><br><span class="line">console.log(obj);</span><br><span class="line">// &#123; abcfoo: &apos;bar&apos; &#125;</span><br></pre></td></tr></table></figure>
-<p>这个特性在某种意义上是为后面的Symbol而准备的。比如一些比较常用的、会被ECMAScript引擎的内部实现所使用的Symbol需要使用这个特性来对对象字面量进行拓展。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">const fibo = &#123;</span><br><span class="line">    a: 0,</span><br><span class="line">    b: 1,</span><br><span class="line">    [ Symbol.iterator ]() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            next() &#123;</span><br><span class="line">                [fibo.a, fibo.b] = [fibo.b, fibo.a + fibo.b]</span><br><span class="line">                return &#123;done:false, value: fibo.b&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">for(const n of fibo) &#123;</span><br><span class="line">    if(n&gt;100) break;</span><br><span class="line">    console.log(n.toString() + &apos; &apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 1 2 3 5 8 13 21 34 55 89</span><br></pre></td></tr></table></figure>
-<p>这段代码中结合了方法类属性的省略语法糖、可动态计算的属性值、解构语法（用于交换变量值）记忆Symbol等新特性，创建了一个可以生成斐波那契数列的对象，并利用for-of 循环语句将数列中的前若干个元素输出。</p>
-<p>4、将属性名定义省略</p>
-<p>在某些场景中，我们需要将一些已经被定义的变量（或常量）作为其他对象字面量的属性值进行返回或传入操作。然而在很多情况下，这些变量名和属性名都是相同的，可以如下写：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const foo = 123;</span><br><span class="line">const bar = () =&gt; foo;</span><br><span class="line">const obj =&#123;</span><br><span class="line">    foo,</span><br><span class="line">    bar</span><br><span class="line">&#125;</span><br><span class="line">console.log(obj);</span><br><span class="line">// &#123; foo: 123, bar: [Function: bar] &#125;</span><br></pre></td></tr></table></figure>
-
-          
+          1、函数类属性的省略语法
+由于ES2015中引入了类机制（Class），普通的对象字面量也吸收了其中的一些语法糖，这可以==让方法属性省略function==，因此让方法属性可以以一种更直观的语法来表达。
+1234567891011121314语法&#123; method() &#123;...&
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/对象字面量扩展语法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1668,18 +1339,19 @@
       
         
           
-            <p>1、使用语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 语法</span><br><span class="line"></span><br><span class="line">`string...`</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">const str = `something`</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>支持字符串元素注入</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const str = &apos;world&apos;;</span><br><span class="line">const str1 = `hello $&#123;str&#125;` //hello world</span><br></pre></td></tr></table></figure>
-<p>-支持换行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const sql = `</span><br><span class="line">    SELECT * FROM Users</span><br><span class="line">    WHERE FirstName = &apos;Mike&apos;</span><br><span class="line">    LIMIT 5;</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
-<p>注意事项：</p>
-<p>域普通子浮窗不一样的是，多行字符串没有两种或以上的定义语法，这就意味着它无法像下面第一行代码中普通子符串那样，使用双引号嵌套单引号来表达字符串中的字符串，但可以使用反斜杠来将需要显示的反勾号转义为普通的字符。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const str1 = &quot;Here is the outter string. &apos;This is a string in another string&apos;&quot;;</span><br><span class="line"></span><br><span class="line">const str2 = `Here is the outter string. \`This is a string in another string\``;</span><br><span class="line"></span><br><span class="line">// Here is the outter string. `This is a string in another string`</span><br></pre></td></tr></table></figure>
+          1、使用语法123456// 语法`string...`示例：const str = `something`
 
-          
+支持字符串元素注入
+
+12const str = &apos;world&apos;;const str1 = `hello $&#123;str&#125;` //hello world
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/模板字符串（Template String）/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1830,58 +1502,21 @@
       
         
           
-            <p>1、使用语法</p>
-<p>箭头函数有四种使用语法：</p>
-<ul>
-<li>单一参数的单行箭头函数</li>
-</ul>
-<p>语法： arg =&gt; statement</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const fn = foo =&gt; `$&#123;foo&#125; world`;</span><br><span class="line">console.log(fn(&apos;hello&apos;));  // hello world</span><br></pre></td></tr></table></figure>
-<p>这是箭头函数最简洁的形式，常见于用作简单的处理函数，如过滤。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let array = [&apos;a&apos;, &apos;bc&apos;, &apos;def&apos;, &apos;hhhj&apos;];</span><br><span class="line">newArr = array.filter(item =&gt; item.length &gt;= 2); // =&gt; [ &apos;bc&apos;, &apos;def&apos;, &apos;hhhj&apos; ]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>多参数的单行箭头函数</li>
-</ul>
-<p>语法： (arg1, arg2) =&gt; statement</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const fn = (foo, bar) =&gt; foo + bar;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>多行箭头函数</li>
-</ul>
-<p>语法： arg =&gt; {…}</p>
-<ul>
-<li>无参数箭头函数</li>
-</ul>
-<p>语法：() =&gt; statement</p>
-<p>使用注意点：</p>
-<p>箭头函数有几个使用注意点：</p>
-<ol>
-<li>函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象</li>
-<li>不可以当作构造函数，也就额是说，不可以使用new命令，否则会抛出一个错误</li>
-<li>不可以使用arguments对象，该对象那个在函数体内不存在。如果要用，可以用rest参数代替</li>
-<li>不可以使用yield命令，因此箭头函数不能用作Generator函数</li>
-</ol>
-<p>上面四点中，第一点尤其值得注意。this对象的指向是可变的，但是在箭头函数中，它是固定的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function foo()&#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">      console.log(&apos;id:&apos;, this.id);  </span><br><span class="line">    &#125;, 100);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var id = 21;</span><br><span class="line">foo.call(&#123; id: 42&#125;);</span><br></pre></td></tr></table></figure>
-<p>上面代码中，setTimeOut的参数是一个箭头函数，这个箭头函数的定义生效是在foo函数生成时，而它的真正执行要等到100毫秒后。如果时普通函数，执行时this应该指向全局对象window，这时应该输出21。但是，箭头函数导致this总是指向函数定义生效时所在的对象(本例时{id: 42}),所以输出的是42。</p>
-<p>箭头函数可以让setTimeOut里面的this,绑定定义时所在的作用域，而不是指向运行时所在的作用域。下面时另一个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function Timer() &#123;</span><br><span class="line">  this.s1 = 0;</span><br><span class="line">  this.s2 = 0;</span><br><span class="line">  // 箭头函数</span><br><span class="line">  setInterval(() =&gt; this.s1++, 1000);</span><br><span class="line">  // 普通函数</span><br><span class="line">  setInterval(function() &#123;</span><br><span class="line">    this.s2++;</span><br><span class="line">  &#125;, 1000);</span><br><span class="line">&#125;</span><br><span class="line">var timer = new Timer();</span><br><span class="line">setTimeout(() =&gt; console.log(&apos;s1: &apos;, timer.s1), 3100);</span><br><span class="line">setTimeout(() =&gt; console.log(&apos;s2: &apos;, timer.s2), 3100);</span><br><span class="line">// s1:  3</span><br><span class="line">// s2:  0</span><br></pre></td></tr></table></figure>
-<p>上面代码中，Timer函数内部设置了连个定时器，分别使用了箭头函数和普通函数。前者的this绑定定义时所在的作用域（即Timer函数），后者的this指向运行时所在的作用域（即全局对象）。所以，3100毫秒之后，timer.s1被更新了3次，而timer.s2一次都没更新。</p>
-<p>箭头函数可以让this指向固定化，这种特性很有利于封装回掉函数。下面时一个例子，DOM事件的回调函数封装在一个对象里面。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var handler = &#123;</span><br><span class="line">  id: &apos;123456&apos;,</span><br><span class="line"></span><br><span class="line">  init: function() &#123;</span><br><span class="line">    document.addEventListener(&apos;click&apos;,</span><br><span class="line">      event =&gt; this.doSomething(event.type), false);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  doSomething: function(type) &#123;</span><br><span class="line">    console.log(&apos;Handling &apos; + type  + &apos; for &apos; + this.id);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>上面代码的init方法中，使用了箭头函数，这导致这个箭头函数里面的this, 总是指向handler对象。否则，回调函数运行时，this.doSomething这一行会报错，因为此时this指向document对象。</p>
-<p>总结：</p>
-<p>this指向的固定化，并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this，导致内部的this就是外层代码块的this。正是因为它没有this，所以也就不能用作构造函数。</p>
-<p>所以，箭头函数转成ES5的代码如下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// ES6 </span><br><span class="line">function foo() &#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;id:&apos;, this.id);</span><br><span class="line">    &#125;, 100)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ES5</span><br><span class="line">function foo() &#123;</span><br><span class="line">    var _this = this;</span><br><span class="line">    setTimeout(function()&#123;</span><br><span class="line">        console.log(&apos;id:&apos;, _this.id);</span><br><span class="line">    &#125;, 100)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面代码中，转换后的ES5版本清楚地说明了，箭头函数里卖弄根本没有自己的this,而是引用外层的this。</p>
-<p>PS:</p>
-<p>除了this, 以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments、super、new.target</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">function foo()&#123;</span><br><span class="line">    setTimeout(() =&gt; &#123;</span><br><span class="line">        console.log(&apos;args:&apos;, arguments);</span><br><span class="line">    &#125;,100)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">foo(2,4,6,8);</span><br><span class="line">// args: [2, 4, 6, 8]</span><br></pre></td></tr></table></figure>
-<p>上面代码中，箭头函数内部的变量arguments,其实是函数foo的arguments变量。</p>
-<p>另外，由于箭头函数没有自己的this, 所以当然也就不能用call()、apply()、bind()这些方法去改变this的指向。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(function()&#123;</span><br><span class="line">    return [</span><br><span class="line">        (() =&gt; console.log(this.x)).bind(&#123;x: &apos;inner&apos;&#125;)()</span><br><span class="line">    ];</span><br><span class="line">&#125;).call(&#123;x: &apos;outer&apos;&#125;);</span><br><span class="line">// [&apos;outer&apos;]</span><br></pre></td></tr></table></figure>
-<p>上面代码中，箭头函数没有自己的this,所以bind方法无效，内部的this指向外部的this。</p>
+          1、使用语法
+箭头函数有四种使用语法：
 
-          
+单一参数的单行箭头函数
+
+语法： arg =&gt; statement
+12const fn = foo =&gt; `$&#123;foo&#125; world`;console.log(fn(&apos;hello&apos;));  // hell
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/箭头函数/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2032,158 +1667,21 @@
       
         
           
-            <p>1、块级作用域</p>
-<ul>
-<li>为什么需要块级作用域？</li>
-</ul>
-<p>ES5只有全局作用域和函数作用域，没有块级作用域，这带来很多不合理的场景。</p>
-<p>第一种场景，==内层变量可能覆盖外层变量==：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var tmp = new Date();</span><br><span class="line">function f() &#123;</span><br><span class="line">    console.log(tmp);</span><br><span class="line">    if(false) &#123;</span><br><span class="line">        var tmp = &apos;hell0&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">f(); //undefined</span><br></pre></td></tr></table></figure>
-<p>上面代码中，函数f执行后，输出结果为undefined,原因在于变量提升，导致内层的tmp变量覆盖了外层的tmp变量。</p>
-<p>第二种场景，==用来计数的循环变量泄露为全局变量==：</p>
-<p>常见的坑——循环绑定事件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=&quot;list&quot;&gt;</span><br><span class="line">   &lt;li&gt;111&lt;/li&gt;</span><br><span class="line">   &lt;li&gt;222&lt;/li&gt;</span><br><span class="line">   &lt;li&gt;333&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line"></span><br><span class="line">var list = document.getElementById(&apos;list&apos;);</span><br><span class="line">var li = list.getElementsByTagName(&apos;li&apos;);</span><br><span class="line">for(var i=0; i&lt;li.length; i++) &#123;</span><br><span class="line">    li[i].onclick = function() &#123;</span><br><span class="line">        console.log(i); // 3,3,3</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>解决办法：</p>
-<p>第一种：立即调用的函数表达(IIFE)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var list = document.getElementById(&apos;list&apos;);</span><br><span class="line">var li = list.getElementsByTagName(&apos;li&apos;);</span><br><span class="line">for(var i=0; i&lt;li.length; i++) &#123;</span><br><span class="line">    (function(i)&#123;</span><br><span class="line">        li[i].onclick = function() &#123;</span><br><span class="line">            console.log(i); // 0, 1, 2</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第二种：将变量i保存给每个段落对象li上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var list = document.getElementById(&apos;list&apos;);</span><br><span class="line">var li = list.getElementsByTagName(&apos;li&apos;);</span><br><span class="line">for(var i=0; i&lt;li.length; i++) &#123;</span><br><span class="line">    li[i].i = i;</span><br><span class="line">    li[i].onclick = function() &#123;</span><br><span class="line">        console.log(this.i); // 0, 1, 2</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第三种：将变量i保存在匿名函数自身</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var list = document.getElementById(&apos;list&apos;);</span><br><span class="line">var li = list.getElementsByTagName(&apos;li&apos;);</span><br><span class="line">for(var i=0; i&lt;li.length; i++) &#123;</span><br><span class="line">   (li[i].onclick = function()&#123;</span><br><span class="line">       console.log(arguments.callee.i); // 0, 1, 2</span><br><span class="line">   &#125;).i = i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第四种：ES6新语法let关键字</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var list = document.getElementById(&apos;list&apos;);</span><br><span class="line">var li = list.getElementsByTagName(&apos;li&apos;);</span><br><span class="line">for(let i=0; i&lt;li.length; i++) &#123;</span><br><span class="line">   li[i].onclick = function()&#123;</span><br><span class="line">       console.log(i); // 0, 1, 2</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>ES6块级作用域</li>
-</ul>
-<p>==let==实际上为javaScript新增了块级作用域。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function f1() &#123;</span><br><span class="line">    let n=5;</span><br><span class="line">    if(true) &#123;</span><br><span class="line">        let n=10;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(n); //5</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ES6允许块级作用域的任意嵌套。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&#123;&#123;&#123; let instance = &apos;hello world&apos; &#125;&#125;&#125;&#125;&#125;;</span><br></pre></td></tr></table></figure>
-<p>上面代码使用了一个五层的块级作用域。外层作用域无法读取内层作用域的变量。</p>
-<p>内层作用域可以定义外层作用域的同名变量。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&#123;&#123;&#123;</span><br><span class="line">    let instance = &apos;hello world&apos;;</span><br><span class="line">    &#123;let instance = &apos;hello world&apos;&#125;</span><br><span class="line">&#125;&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p>++块级作用域的出现，实际上使获得广泛应用的立即执行函数表达式(IIFE)不再必要了。++</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// IIFE写法</span><br><span class="line">(function()&#123;</span><br><span class="line">    var tmp = ...;</span><br><span class="line">    ...</span><br><span class="line">&#125;());</span><br><span class="line"></span><br><span class="line">// 块级作用域写法</span><br><span class="line">&#123;</span><br><span class="line">    let tmp = ...;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2、let与var的区别与联系<br>对比| let | var<br>—|—|—<br>定义变量 | Y| Y<br>可被释放 | Y| Y<br>可被提升 | N| Y<br>重复定义检查 | Y| N<br>可被用于块状作用域 | Y| N<br>3、const的本质</p>
-<p>const 实际上保证的，并不是变量的值不得改动，而是==变量指向的那个内存地址所保存的数据不得改动==。</p>
-<p>对于简单类型的数据（数值、字符串、布尔值），值就保存在变量指向的那个内存地址，因此等同于常量。</p>
-<p>但对于复杂数据类型的数据（主要是对象和数组），变量指向的内存地址，保存的知识一个指向实际数据的指针，const只能保证这个指针是固定的（即总是指向另一个固定的地址）,至于它指向的数据结构是不是可变的，就完全不能控制了。因此，将一个对象声明为常量必须非常小心。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const foo = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">//为foo添加一个属性，可以成功</span><br><span class="line">foo.prop = 123;</span><br><span class="line">console.log(foo.prop); //123</span><br><span class="line"></span><br><span class="line">//将foo指向另一个对象，就会报错</span><br><span class="line">foo = &#123;&#125;; // TypeError: &quot;foo&quot; is read-only</span><br></pre></td></tr></table></figure>
-<p>上面代码中，常量foo储存的是一个地址，这个地址指向一个对象。不可变的只是这个地址，即不能把foo执行指向另一个地址，但对象本身是可变的，所以依然可以为其添加新属性。</p>
-<p>下面是另一个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const a = [];</span><br><span class="line">a.push(&apos;Hello&apos;); // 可执行</span><br><span class="line">a.length = 0; // 可执行</span><br><span class="line">a = [&apos;zhimin&apos;]; //报错</span><br></pre></td></tr></table></figure>
-<p>上面代码中，常量a是一个数组，这个数组本身是可写的，但是如果将另一个数组赋值给a,就会报错。</p>
-<p>==如果冻结一个对象？？？？？==</p>
-<p>如果想将对象冻结，应该使用==Object.freeze==()方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const foo = Object.freeze(&#123;&#125;);</span><br><span class="line">foo.prop = 123;</span><br><span class="line">console.log(foo); // &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>除了将对象本身冻结，对应的属性也应该冻结，下面是一个将对象彻底冻结的函数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 第一种深冻结函数</span><br><span class="line">let constantize = (obj) =&gt; &#123;</span><br><span class="line">    Object.freeze(obj);</span><br><span class="line">    Object.keys(obj).forEach((key) =&gt; &#123;</span><br><span class="line">        if(typeof obj[key] === &apos;object&apos;) &#123;</span><br><span class="line">            constantize(obj[key]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">const person = &#123;zhimin:&#123;age:25&#125;&#125;;</span><br><span class="line">constantize(person);</span><br><span class="line">person.zhimin.sex = &apos;nv&apos;;</span><br><span class="line">console.log(person); // &#123; zhimin: &#123; age: 25 &#125; &#125;</span><br><span class="line"></span><br><span class="line">//第二种深冻结函数</span><br><span class="line">Object.deepFreeze = function(obj) &#123;</span><br><span class="line">    var propNames = Object.getOwnPropertyNames(obj);</span><br><span class="line">    propNames.forEach(function(name) &#123;</span><br><span class="line">        var prop = obj[name];</span><br><span class="line">        if(typeof prop === &apos;object&apos; &amp;&amp;prop !== null) &#123;</span><br><span class="line">            Object.deepFreeze(prop);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    return Object.freeze(obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const obj3 = Object.deepFreeze(&#123;a:&#123;b:1&#125;&#125;);</span><br><span class="line">obj3.a.c = 2;</span><br><span class="line">console.log(obj3);  // &#123; a: &#123; b: 1 &#125; &#125;</span><br></pre></td></tr></table></figure>
-<p>4、for..in, Object.keys()和Object.getOwnPropertyNames()的区别</p>
-<p><strong>扩充：如何理解Object.create()???</strong></p>
-<p>定义(MDN)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object.create(proto, [propertiesObject])</span><br></pre></td></tr></table></figure>
-<ul>
-<li>proto：新创建对象的原型对象</li>
-<li>propertiesObject:可选。要添加到新对象的可枚举（新添加的属性是其自身的属性，而不是其原型链上的属性）的属性。这些属性对应==Object.defineProperties==()的第二个参数。</li>
-</ul>
-<p>举个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const car = &#123;</span><br><span class="line">    isSportsCar: false,</span><br><span class="line">    introduction: function() &#123;</span><br><span class="line">        console.log(`Hi girl, this is a $&#123;this.name&#125;.</span><br><span class="line">        Do you like to have a drink with me? $&#123;this.isSportsCar&#125;`);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const porsche = Object.create(car,&#123;</span><br><span class="line">    // color成为porsche的数据属性</span><br><span class="line">    color: &#123;</span><br><span class="line">        writable: true,</span><br><span class="line">        configurable:true,</span><br><span class="line">        value: &apos;yellow&apos;</span><br><span class="line">    &#125;,</span><br><span class="line">    // type成为porsche的访问器属性</span><br><span class="line">    type: &#123;</span><br><span class="line">        // writable、configurable等属性，不显示设置则默认为false</span><br><span class="line">        get:function()&#123;return &apos;convertible&apos;&#125;,</span><br><span class="line">        set:function(val)&#123;&quot;change this car to&quot;, val&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">porsche.name = &apos;Porsche 911&apos;; //name是porsche的属性，而不是car的</span><br><span class="line">porsche.isSportsCar = true;  // 继承的属性可以被复写</span><br><span class="line"></span><br><span class="line">porsche.introduction(); // Hi girl, this is a Porsche 911. Do you like to have a drink with me ? true</span><br></pre></td></tr></table></figure>
-<p>在控制台中打印porsche如下：</p>
-<p><img src="6A6EFFE6B3924E19B9600CD45BCB1CCA" alt="image"></p>
-<p>Object.create()的模拟实现：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function createObj(obj) &#123;</span><br><span class="line">    function F() &#123;&#125;</span><br><span class="line">    var F.prototype = obj;</span><br><span class="line">    return new F();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Object.create()与{}的区别</p>
-<ul>
-<li>使用{}创建的对象</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var obj1 = &#123;a:1&#125;;</span><br><span class="line">console.log(obj1);</span><br></pre></td></tr></table></figure>
-<p>在chrome控制台打印如下：</p>
-<p><img src="F5A9DD5CBF274808B0A5BEA66E7D7B1D" alt="image"></p>
-<p>从上图可以看到，新创建的对象继承了Object自身的方法，如hasOwnProperty、toString等，在新对象上可以直接使用。</p>
-<ul>
-<li>使用Object.create()创建对象</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var obj2 = Object.create(null, &#123;</span><br><span class="line">    a: &#123;</span><br><span class="line">        writable: true,</span><br><span class="line">        configurable: true,</span><br><span class="line">        value: &apos;1&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">console.log(obj2);</span><br></pre></td></tr></table></figure>
-<p>在chrome控制台打印如下：</p>
-<p><img src="EEDBC23147C34A8490B0BBADEE15BF2D" alt="image"></p>
-<p>可以看到，新创建的对象除了自身属性a之外，原型链上没有任何属性，也就是没有继承Object的任何东西，此时如果我们调用obj2.toString()会报Uncaught TypeError的错误</p>
-<p>我们可以会注意到，第一个参数使用了null。也就是说将null设置成了新创建对象的原型，自然就不会又原型链上的属性。我们再把上面的例子改一下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var obj3 = Object.create(&#123;&#125;, &#123;</span><br><span class="line">    a: &#123;</span><br><span class="line">        writable: true,</span><br><span class="line">        configurable: true,</span><br><span class="line">        value: &apos;1&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">console.log(obj3)</span><br></pre></td></tr></table></figure>
-<p>将null改为{},结果是怎样的？ 在chrome控制台打印如下：</p>
-<p><img src="66957020CE014685B1199339E081249C" alt="image"></p>
-<p>可以看到，这样创建的对象和使用{}创建对象已经很相近了，但是还是有一点区别：==多了一层proto嵌套。==</p>
-<p>最后再来改一下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var obj4 = Object.create(Object.prototype, &#123;</span><br><span class="line">    a: &#123;</span><br><span class="line">        writable: true,</span><br><span class="line">        configurable: true,</span><br><span class="line">        value: &apos;1&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">console.log(obj4);</span><br></pre></td></tr></table></figure>
-<p>chrome控制台打印如下：</p>
-<p><img src="5071F1D05C544D07A01F736399E2E741" alt="image"></p>
-<p>这次就和使用{}创建的对象一摸一样了。</p>
-<p><strong>Object.create(null)的使用场景</strong></p>
-<p>为什么很多源码中作者会使用Object.create(null)来初始化一个对象？这是作者的习惯，还是一个最佳实践？</p>
-<p>其实都不是，这并不是作者不经思考随便用的，也不是js编程中的最佳事件，而是需要因地制宜，具体问题具体分析。</p>
-<p>我们进一步比较一下Object.create(null)和{}创建空对象的区别：</p>
-<p>在chrome打印如下：<br><img src="2A68EAFF42724967A857FFFAE8282B73" alt="image"></p>
-<p>从上图可以看到，使用create创建的对象，没有任何属性，显示No properties,我们可以把它当作一个非常纯净的map来使用，我么可以自己定义hasOwnProperty、toString方法，不管是有意还是不小心，我们完全不必担心会将原型链上的同名方法覆盖掉。举个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//Demo1:</span><br><span class="line">var a= &#123;...省略很多属性和方法...&#125;;</span><br><span class="line"></span><br><span class="line">//如果想要检查a是否存在一个名为toString的属性，你必须像下面这样进行检查：</span><br><span class="line">if(Object.prototype.hasOwnProperty.call(a,&apos;toString&apos;))&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">//为什么不能直接用a.hasOwnProperty(&apos;toString&apos;)?因为你可能给a添加了一个自定义的hasOwnProperty</span><br><span class="line">//你无法使用下面这种方式来进行判断,因为原型上的toString方法是存在的：</span><br><span class="line">if(a.toString)&#123;&#125;</span><br><span class="line"></span><br><span class="line">//Demo2:</span><br><span class="line">var a=Object.create(null)</span><br><span class="line">//你可以直接使用下面这种方式判断，因为存在的属性，都将定义在a上面，除非手动指定原型：</span><br><span class="line">if(a.toString)&#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>另一个使用create(null)的理由是，在我们使用for..in循环的时候会遍历对象原型链上的属性，使用create(null)就不必再对属性进行检查了，当然，我们也可以直接使用Object.keys()。</p>
-<p>总结：</p>
-<ol>
-<li>你需要一个非常干净且高度可定制的对象当作数据字典的时候；</li>
-<li>想节省hasOwnProperty带来的一丢丢性能损失并且可以偷懒少一点代码的时候<br>用Object.create(null)吧，其他时，用{}。</li>
-</ol>
-<p>言归正传，==看一下for..in、Object.keys()和Object.getOwnPropertyNames的区别==</p>
-<p>首先我们需要一个父对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var parent = Object.create(Object.prototype, &#123;</span><br><span class="line">    a: &#123;</span><br><span class="line">        value:1,</span><br><span class="line">        writable:true,</span><br><span class="line">        enumerable:true,</span><br><span class="line">        configurable:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>parent继承自Object.pototype，有一个可枚举的属性a。下面我们再创建一个继承自parent得对象child。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">var child = Object.create(parent,&#123;</span><br><span class="line">    b:&#123;</span><br><span class="line">        value:2,</span><br><span class="line">        writable: true,</span><br><span class="line">        enumerable: true,</span><br><span class="line">        configurable:true,</span><br><span class="line">    &#125;,</span><br><span class="line">    c:&#123;</span><br><span class="line">        value:3,</span><br><span class="line">        writable:true,</span><br><span class="line">        enumerable:false,</span><br><span class="line">        configurable:true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>child有两个属性b和c,其中b为可枚举属性，c为不可枚举属性。</p>
-<p>下面将用不同的方法遍历child对象：</p>
-<ul>
-<li>for..in</li>
-</ul>
-<p>for in 是最早来遍历对象的方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for(var key in child) &#123;</span><br><span class="line">    console.log(key);</span><br><span class="line">&#125;</span><br><span class="line">// &gt; b</span><br><span class="line">// &gt; a</span><br></pre></td></tr></table></figure>
-<p>从输出上可以看出，for in会==输出自身以及原型链上可枚举的属性==。</p>
-<p>PS: 不同的浏览器对for in属性输出的顺序可能不同。</p>
-<p>如果仅想输出自身的属性可以借助hasOwnProperty，可以过滤掉原型链上的属性。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for(var key in child)&#123;</span><br><span class="line">    if(child.hasOwnProperty(key))&#123;</span><br><span class="line">        console.log(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// &gt; b</span><br></pre></td></tr></table></figure>
-<p>上面代码，仅输出了child自己的可枚举属性b,而没有输出原型parent中的属性。</p>
-<ul>
-<li>Object.keys()</li>
-</ul>
-<p>Object.keys是es6中新增的方法，用来获取对象自身的全部属性名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">console.log(Object.keys(child));</span><br><span class="line"></span><br><span class="line">// &gt; [&quot;b&quot;]</span><br></pre></td></tr></table></figure>
-<p>==可以看出Object.keys的效果和for in + hasOwnProperty的效果是一样的。==</p>
-<ul>
-<li>Object.getOwnPropertyNames()</li>
-</ul>
-<p>Object.getOwnPropertyNames也是ES6中新增的方法，用来获取对象自身的全部属性名。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">console.log(Object.getOwnPropertyNames(child));</span><br><span class="line"></span><br><span class="line">// &gt; [&quot;b&quot;, &quot;c&quot;];</span><br></pre></td></tr></table></figure>
-<p>从输出可以看出其和Object.keys()的区别。</p>
-<p>5、变量的生命周期</p>
-<p>在ECMAScript中，一个变量(或常量)的生命周期模式是固定的，有两种因素决定，分别是==作用域和对其的引用==。</p>
-<p>在ECMAScript中，变量(或常量)的生命周期是从程序进入定义语句所在的作用域开始的，即便是在定义语句之前。</p>
-<ol>
-<li>ECMAScript引擎在进入一个作用域时，会先扫描这个作用域内的变量(或常量)定义语句(var,let或const)，然后在这个作用域内为扫描得到的变量名做准备，在当前作用域中被扫描到的变量名都会进入==未声明阶段==。</li>
-<li>进入声明语句时，var foo, 即前半句是声明部分，用于在ECMAScript引擎中产生一个变量名，但此时该变量名没有对应的绑定和内存空间，所以“值”为undefined。</li>
-<li>=的作用是作为变量的赋值语句，引擎执行至此处几位改变量的==赋值部分==，计算将要赋予变量名的值的物理长度(内存空间占用大小)，向系统申请相应大小的内存空间，然后将数据存储到里面去，并在变量名和内存空间之间建立==绑定关系==，此时变量(或常量)才得到了相应的值。</li>
-<li>到当前作用域中的语句被执行完毕时，引擎便会检查该作用域中被定义的变量(或常量)的被引用情况，如果引用已被全部解除，引擎别拿回认为其应该被清除。</li>
-<li>运行引擎会不断检查存在于运行时中的变量(或常量)的被引用情况，并重复第四步，直至程序结束。</li>
-</ol>
-<p>需要注意的时，在ES6标准之前，我们可能会遇到下面这种情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var foo = 1;</span><br><span class="line">(function()&#123;</span><br><span class="line">  console.log(foo); // =&gt; undefined</span><br><span class="line">  var foo = 2;</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<p>就如上面所说的，一旦引擎进入一个作用域时，会先扫描该作用域内的定义语句。在这段代码中，我们可以看到在外层作用域中定义了变量foo,而在内层的作用域中，我们在对变量foo读取代码后又对其再次“定义”。此时我们便可以发现在第二次定义语句之前对foo的引用所获得的值竟然时undefined，因为此时变量foo处于未声明阶段，即使它在上一层作用域已被定义。</p>
-<p>但实际上，这并不符合正常的编程逻辑，所以在ES6的let和const中，引擎将这种行为视为错误行为，并抛出错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">console.log(foo); // =&gt; ReferenceError</span><br><span class="line">console.log(bar); // =&gt; ReferenceError</span><br><span class="line"></span><br><span class="line">let foo = 1;</span><br><span class="line">const bar = 2;</span><br></pre></td></tr></table></figure>
-<p>ES2015标准中(一般情况下为严格模式)不允许变量(或常量)在被定义之前被其他语句所读取，以避免出现逻辑性错误。</p>
-<p>总结：</p>
-<p>从工程化角度上看，我们应该在ES2015中遵从一下三条原则：</p>
-<ol>
-<li>一般情况下，使用const来定义值的存储容器(常量)。</li>
-<li>只有在值容器明确地被确定将会被改变时才使用let来定义(变量)。</li>
-<li>不再使用var。</li>
-</ol>
+          1、块级作用域
 
-          
+为什么需要块级作用域？
+
+ES5只有全局作用域和函数作用域，没有块级作用域，这带来很多不合理的场景。
+第一种场景，==内层变量可能覆盖外层变量==：
+12345678var tmp = new Date();function f() &#123;    console.log(tm
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/27/let与const命令/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
